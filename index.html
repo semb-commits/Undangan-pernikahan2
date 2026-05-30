@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Pernikahan Rizal & Ajeng</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
+  
+  body { 
+    background: #1a1a1a; 
+    color: #d4af37; 
+    overflow: hidden;
+  }
+
+  .page {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    animation: fadeIn 0.8s ease;
+  }
+  .page.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .floral-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('https://i.ibb.co/Vp2z6gW/floral-gold.png');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .content {
+    margin: auto;
+    text-align: center;
+    padding: 40px 20px;
+    z-index: 2;
+    position: relative;
+    max-width: 600px;
+  }
+
+  h1 { font-size: 2.8rem; margin: 20px 0; color: #d4af37; font-style: italic; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+  h2 { font-size: 1.8rem; margin-bottom: 15px; color: #d4af37; }
+  p { font-size: 1.1rem; line-height: 1.7; color: #f5f5f5; margin-bottom: 10px; }
+
+  .btn {
+    background: linear-gradient(135deg, #d4af37, #f9e076);
+    color: #1a1a1a;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 30px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    transition: all 0.2s;
+  }
+  .btn:active { transform: scale(0.95); }
+
+  .photo {
+    width: 250px;
+    height: 350px;
+    object-fit: cover;
+    border: 4px solid #d4af37;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  }
+
+  .cover-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.9) 100%);
+    z-index: 2;
+  }
+
+  .maps iframe {
+    width: 100%;
+    height: 250px;
+    border: 2px solid #d4af37;
+    border-radius: 15px;
+    margin-top: 15px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #d4af37;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #f9e076;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+
+  .sambutan {
+    font-style: italic;
+    color: #e8e8e8;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .acara-box {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #d4af37;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  @media(max-width: 600px){
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.5rem; }
+    .photo { width: 200px; height: 280px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HALAMAN 1: COVER -->
+<div class="page active" id="page1">
+  <img src="https://i.postimg.cc/zX4hCb1v/1780107259931.jpg" class="cover-photo">
+  <div class="cover-overlay"></div>
+  <div class="content">
+    <p class="sambutan">The Wedding of</p>
+    <h1>Rizal & Ajeng</h1>
+    <p class="sambutan">Kepada Yth.<br><strong id="namaTamu">Tamu Undangan</strong></p>
+    <button class="btn" onclick="nextPage()">Buka Undangan</button>
+  </div>
+</div>
+
+<!-- HALAMAN 2: MEMPELAI PRIA -->
+<div class="page floral-bg" id="page2">
+  <div class="content">
+    <img src="https://i.postimg.cc/HsFMwcCJ/1780107271151.jpg" class="photo">
+    <h2>Rizal Aditya Putra</h2>
+    <p>Putra dari<br>Bapak Jaelani & Alm. Ibu Siti Aminah</p>
+    <button class="btn" onclick="nextPage()">Selanjutnya</button>
+  </div>
+</div>
+
+<!-- HALAMAN 3: MEMPELAI WANITA -->
+<div class="page floral-bg" id="page3">
+  <div class="content">
+    <img src="https://i.postimg.cc/gk1hVXPL/1780107265251.jpg" class="photo">
+    <h2>Ajeng Rosita</h2>
+    <p>Putri dari<br>Alm. Bapak Mustakim & Ibu Triana</p>
+    <button class="btn" onclick="nextPage()">Selanjutnya</button>
+  </div>
+</div>
+
+<!-- HALAMAN 4: ACARA + LOKASI + RSVP -->
+<div class="page floral-bg" id="page4">
+  <div class="content" style="max-height: 90vh; overflow-y: auto;">
+    
+    <p class="sambutan">
+      "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, 
+      supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang."
+    </p>
+    <p class="sambutan">QS. Ar-Rum: 21</p>
+
+    <div class="acara-box">
+      <h2>Jadwal Acara</h2>
+      <p><strong>Akad Nikah</strong><br>Sabtu, 5 Juli 2026<br>Pukul 08:00 WIB</p>
+      
+      <p style="margin-top:20px;"><strong>Resepsi</strong><br>Sabtu, 5 Juli 2026<br>Pukul 10:00 WIB</p>
+    </div>
+
+    <div class="acara-box">
+      <h2>Lokasi Acara</h2>
+      <div class="maps">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.123456789!2d112.123456!3d-7.123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMDcnMjQuNCJTIDExMsKwMDcnMjQuNCJF!5e0!3m2!1sid!2sid!4v1690000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <a href="https://maps.app.goo.gl/HpBAqzLtGE525Btv5" target="_blank" class="btn" style="display:inline-block; text-decoration:none; margin-top:15px;">Buka di Google Maps</a>
+    </div>
+
+    <h2 style="margin-top:30px;">Konfirmasi Kehadiran</h2>
+    <form id="rsvpForm">
+      <input type="text" id="namaRSVP" placeholder="Nama Anda" required>
+      <select id="kehadiran" required>
+        <option value="">Konfirmasi Kehadiran</option>
+        <option value="Hadir">Hadir</option>
+        <option value="Tidak Hadir">Tidak Hadir</option>
+      </select>
+      <textarea id="ucapan" placeholder="Ucapan & Doa untuk kedua mempelai"></textarea>
+      <button type="submit" class="btn">Kirim Konfirmasi</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  let currentPage = 1;
+  const totalPages = 4;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  document.getElementById('namaTamu').innerText = urlParams.get('untuk') || 'Tamu Undangan';
+
+  function nextPage() {
+    document.getElementById('page' + currentPage).classList.remove('active');
+    currentPage++;
+    if (currentPage <= totalPages) {
+      document.getElementById('page' + currentPage).classList.add('active');
+    }
+  }
+
+  document.getElementById('rsvpForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    
+    const nama = document.getElementById('namaRSVP').value;
+    const hadir = document.getElementById('kehadiran').value;
+    const ucapan = document.getElementById('ucapan').value;
+    
+    const pesan = `Halo, saya ${nama}%0A%0A` +
+                  `Konfirmasi Kehadiran: ${hadir}%0A%0A` +
+                  `Ucapan: ${ucapan}`;
+    
+    const noWA = "628xxxxxxxxxx";
+    window.open(`https://wa.me/${noWA}?text=${pesan}`, '_blank');
+  });
+</script>
+
+</body>
+  </html>
