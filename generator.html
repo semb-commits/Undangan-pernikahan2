@@ -3,65 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bulk Generator Link Undangan</title>
+<title>Generator Link Undangan</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
-  body { background: #1a1a1a; color: #f5f5f5; padding: 30px 20px; }
-.container { background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 20px; padding: 30px; max-width: 1100px; margin: 0 auto; backdrop-filter: blur(10px); }
-  h2 { color: #d4af37; margin-bottom: 15px; font-size: 1.8rem; text-align: center; }
-  h3 { color: #d4af37; margin: 20px 0 10px; font-size: 1.3rem; }
-  textarea { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #d4af37; border-radius: 12px; background: rgba(0,0,0,0.6); color: #fff; font-size: 1rem; outline: none; min-height: 120px; resize: vertical; font-family: monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+  body { background: #1a1a1a; color: #f5f5f5; padding: 20px; }
+.container { background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 16px; padding: 25px; max-width: 1000px; margin: 0 auto; }
+  h2 { color: #d4af37; margin-bottom: 20px; font-size: 1.6rem; text-align: center; }
+  h3 { color: #d4af37; margin: 20px 0 10px; font-size: 1.2rem; }
+  textarea { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #d4af37; border-radius: 10px; background: rgba(0,0,0,0.6); color: #fff; font-size: 0.95rem; outline: none; min-height: 150px; resize: vertical; }
 .side-input { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 768px) {.side-input { grid-template-columns: 1fr; } }
-.btn { background: linear-gradient(135deg, #d4af37, #f9e076); color: #1a1a1a; padding: 14px 30px; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; margin: 10px 5px; font-weight: bold; transition: 0.2s; }
-.btn:active { transform: scale(0.97); }
+.btn { background: linear-gradient(135deg, #d4af37, #f9e076); color: #1a1a1a; padding: 12px 24px; border: none; border-radius: 50px; font-size: 1rem; cursor: pointer; margin: 5px; font-weight: 600; }
 .btn-danger { background: #ff4d4d; color: #fff; }
+.btn-secondary { background: #555; color: #fff; }
 .btn-group { text-align: center; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; }
 .result { margin-top: 25px; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; min-width: 500px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; min-width: 450px; }
   th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
   th { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
   td a { color: #d4af37; word-break: break-all; }
-.copy-btn,.edit-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin: 2px; }
+.copy-btn,.edit-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin: 2px; }
   label { color: #d4af37; font-size: 0.95rem; margin-top: 10px; display: block; }
-.output-code { background: rgba(0,0,0,0.7); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Bulk Generator Link Undangan</h2>
+  <h2>Generator Link Undangan</h2>
 
   <div class="side-input">
     <div>
-      <label>Sisi Mempelai Cowok</label>
-      <textarea id="namaCowok" placeholder="1 nama per baris:"></textarea>
+      <label>Teman Mempelai Cowok</label>
+      <textarea id="namaCowok" placeholder="1 nama per baris:&#10;Budi Santoso&#10;Agus Wijaya"></textarea>
+      <button class="btn btn-secondary" onclick="generateSample('cowok', 100)">Generate 100 Nama Contoh</button>
     </div>
     <div>
-      <label>Sisi Mempelai Cewek</label>
-      <textarea id="namaCewek" placeholder="1 nama per baris:"></textarea>
+      <label>Teman Mempelai Cewek</label>
+      <textarea id="namaCewek" placeholder="1 nama per baris:&#10;Siti Aminah&#10;Dewi Lestari"></textarea>
+      <button class="btn btn-secondary" onclick="generateSample('cewek', 100)">Generate 100 Nama Contoh</button>
     </div>
   </div>
 
   <div class="btn-group">
-    <button class="btn" onclick="generate()">Generate Semua</button>
-    <button class="btn" onclick="downloadCSV()">Download Excel CSV</button>
+    <button class="btn" onclick="generate()">Generate Link</button>
+    <button class="btn" onclick="downloadCSV()">Download Excel</button>
     <button class="btn" onclick="downloadPDF()">Download PDF</button>
-    <button class="btn btn-danger" onclick="clearAll()">Hapus Semua Data</button>
+    <button class="btn btn-danger" onclick="clearAll()">Hapus Semua</button>
   </div>
 
   <div class="result" id="result" style="display:none;">
-    <h3>Kode HTML untuk Halaman Foto</h3>
-    <div class="output-code" id="outputHTML"></div>
-    <button class="copy-btn" onclick="copyText(document.getElementById('outputHTML').innerText)">Copy Kode</button>
-
-    <h3>Sisi Mempelai Cowok - <span id="countCowok">0</span> tamu</h3>
+    <h3>Teman Mempelai Cowok - <span id="countCowok">0</span> orang</h3>
     <table id="tableCowok">
       <thead><tr><th>No</th><th>Nama Tamu</th><th>Link Undangan</th><th>Action</th></tr></thead>
       <tbody></tbody>
     </table>
 
-    <h3>Sisi Mempelai Cewek - <span id="countCewek">0</span> tamu</h3>
+    <h3>Teman Mempelai Cewek - <span id="countCewek">0</span> orang</h3>
     <table id="tableCewek">
       <thead><tr><th>No</th><th>Nama Tamu</th><th>Link Undangan</th><th>Action</th></tr></thead>
       <tbody></tbody>
@@ -77,10 +74,28 @@ let dataCowok = [];
 let dataCewek = [];
 const baseURL = window.location.origin + window.location.pathname.replace('generator.html', '');
 
+const namaDepan = ['Budi','Siti','Agus','Dewi','Andi','Rina','Joko','Lina','Rudi','Maya','Hadi','Sari','Tono','Ani','Dedi','Nina','Eko','Fitri','Heri','Wati'];
+const namaBelakang = ['Santoso','Wijaya','Lestari','Pratama','Saputra','Kusuma','Rahayu','Hidayat','Gunawan','Putri','Wibowo','Suryani','Fauzi','Maharani','Utama','Anggraini'];
+
 window.onload = function() {
   dataCowok = JSON.parse(localStorage.getItem('dataCowok') || '[]');
   dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
   renderTables();
+}
+
+function generateSample(side, jumlah) {
+  let sample = '';
+  for (let i = 1; i <= jumlah; i++) {
+    const depan = namaDepan[Math.floor(Math.random() * namaDepan.length)];
+    const belakang = namaBelakang[Math.floor(Math.random() * namaBelakang.length)];
+    sample += `${depan} ${belakang} ${i}\n`;
+  }
+  
+  if (side === 'cowok') {
+    document.getElementById('namaCowok').value = sample;
+  } else {
+    document.getElementById('namaCewek').value = sample;
+  }
 }
 
 function saveToStorage() {
@@ -105,15 +120,6 @@ function generate() {
     if (name) dataCewek.push({ nama: name, link: baseURL + '?untuk=' + encodeURIComponent(name) });
   });
 
-  // Kode HTML foto otomatis pakai foto.jpg
-  const fotoPrewed = baseURL + 'foto.jpg';
-  const htmlCode = `<div class="page" id="page2">
-  <div class="content">
-    <img src="${fotoPrewed}" class="photo">
-  </div>
-</div>`;
-
-  document.getElementById('outputHTML').innerText = htmlCode;
   saveToStorage();
   renderTables();
   document.getElementById('result').style.display = 'block';
@@ -130,13 +136,14 @@ function renderTable(tableId, data, side) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   tbody.innerHTML = '';
   data.forEach((item, i) => {
+    const safeLink = item.link.replace(/'/g, "\\'");
     tbody.innerHTML += `
       <tr>
         <td>${i+1}</td>
-        <td><span>${item.nama}</span></td>
+        <td>${item.nama}</td>
         <td><a href="${item.link}" target="_blank">${item.link}</a></td>
         <td>
-          <button class="copy-btn" onclick="copyText('${item.link}')">Copy</button>
+          <button class="copy-btn" onclick="copyText('${safeLink}')">Copy</button>
           <button class="edit-btn" onclick="editRow('${side}', ${i})">Edit</button>
         </td>
       </tr>
@@ -164,20 +171,19 @@ function clearAll() {
   localStorage.removeItem('dataCewek');
   document.getElementById('namaCowok').value = '';
   document.getElementById('namaCewek').value = '';
-  document.getElementById('outputHTML').innerText = '';
   renderTables();
   document.getElementById('result').style.display = 'none';
 }
 
 function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => alert('Copied!'));
+  navigator.clipboard.writeText(text).then(() => alert('Link copied!'));
 }
 
 function downloadCSV() {
   if (dataCowok.length === 0 && dataCewek.length === 0) return alert('Generate dulu!');
   const allData = [
-  ...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
-  ...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
+...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
+...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
   ];
   const ws = XLSX.utils.json_to_sheet(allData);
   const wb = XLSX.utils.book_new();
@@ -190,11 +196,11 @@ function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.setFontSize(16);
-  doc.text("Daftar Link Undangan Pernikahan", 20, 20);
+  doc.text("Daftar Link Undangan", 20, 20);
   let y = 35;
 
   doc.setFontSize(12);
-  doc.text("SISI MEMPELAI COWOK", 20, y); y += 10;
+  doc.text("Teman Mempelai Cowok", 20, y); y += 10;
   dataCowok.forEach((item,i) => {
     if (y > 270) { doc.addPage(); y = 20; }
     doc.setFontSize(10);
@@ -205,7 +211,7 @@ function downloadPDF() {
 
   y += 10;
   doc.setFontSize(12);
-  doc.text("SISI MEMPELAI CEWEK", 20, y); y += 10;
+  doc.text("Teman Mempelai Cewek", 20, y); y += 10;
   dataCewek.forEach((item,i) => {
     if (y > 270) { doc.addPage(); y = 20; }
     doc.setFontSize(10);
@@ -218,4 +224,4 @@ function downloadPDF() {
 }
 </script>
 </body>
-   </html>
+</html>
