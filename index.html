@@ -39,7 +39,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom left;
-    opacity: 0.18; /* dinaikin dari 0.1 biar lebih jelas */
+    opacity: 0.18;
     pointer-events: none;
     z-index: 1;
   }
@@ -56,7 +56,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: top right;
-    opacity: 0.18; /* dinaikin */
+    opacity: 0.18;
     pointer-events: none;
     z-index: 1;
     transform: scaleX(-1) scaleY(-1);
@@ -73,7 +73,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom right;
-    opacity: 0.18; /* dinaikin */
+    opacity: 0.18;
     pointer-events: none;
     z-index: 1;
     transform: scaleX(-1);
@@ -90,7 +90,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: top left;
-    opacity: 0.18; /* dinaikin */
+    opacity: 0.18;
     pointer-events: none;
     z-index: 1;
     transform: scaleY(-1);
@@ -103,6 +103,11 @@
     z-index: 2;
     position: relative;
     max-width: 600px;
+  }
+
+  /* Khusus halaman cover biar konten naik */
+  .content.cover-content {
+    margin-bottom: 100px;
   }
 
   h1 { 
@@ -155,7 +160,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 8%; /* dinaikin lagi biar muka keliatan full */
+    object-position: center 8%;
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -211,10 +216,13 @@
     .page::before, .page::after, .corner-br, .corner-tl {
       width: 130px;
       height: 160px;
-      opacity: 0.2; /* di HP dinaikin dikit lagi biar keliatan */
+      opacity: 0.2;
     }
     .cover-photo {
-      object-position: center 5%; /* HP dinaikin lebih tinggi */
+      object-position: center 5%;
+    }
+    .content.cover-content {
+      margin-bottom: 140px; /* HP dorong lebih tinggi */
     }
   }
 </style>
@@ -227,7 +235,7 @@
   <div class="corner-br"></div>
   <img src="https://i.postimg.cc/zX4hCb1v/1780107259931.jpg" class="cover-photo">
   <div class="cover-overlay"></div>
-  <div class="content">
+  <div class="content cover-content">
     <p class="sambutan">The Wedding of</p>
     <h1>Rizal & Ajeng</h1>
     <p class="sambutan">Kepada Yth.<br><strong id="namaTamu">Tamu Undangan</strong></p>
