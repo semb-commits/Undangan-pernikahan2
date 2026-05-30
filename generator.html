@@ -7,23 +7,26 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
   body { background: #1a1a1a; color: #f5f5f5; padding: 30px 20px; }
- .container { background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 20px; padding: 30px; max-width: 1100px; margin: 0 auto; backdrop-filter: blur(10px); }
+.container { background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 20px; padding: 30px; max-width: 1100px; margin: 0 auto; backdrop-filter: blur(10px); }
   h2 { color: #d4af37; margin-bottom: 15px; font-size: 1.8rem; text-align: center; }
   h3 { color: #d4af37; margin: 20px 0 10px; font-size: 1.3rem; }
-  textarea { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #d4af37; border-radius: 12px; background: rgba(0,0,0,0.6); color: #fff; font-size: 1rem; outline: none; min-height: 120px; resize: vertical; font-family: monospace; }
- .side-input { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 768px) {.side-input { grid-template-columns: 1fr; } }
- .btn { background: linear-gradient(135deg, #d4af37, #f9e076); color: #1a1a1a; padding: 14px 30px; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; margin: 10px 5px; font-weight: bold; transition: 0.2s; }
- .btn:active { transform: scale(0.97); }
- .btn-danger { background: #ff4d4d; color: #fff; }
- .btn-group { text-align: center; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; }
- .result { margin-top: 25px; overflow-x: auto; }
+  textarea, input[type="text"] { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #d4af37; border-radius: 12px; background: rgba(0,0,0,0.6); color: #fff; font-size: 1rem; outline: none; font-family: monospace; }
+  textarea { min-height: 120px; resize: vertical; }
+.side-input { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.couple-input { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  @media (max-width: 768px) {.side-input,.couple-input { grid-template-columns: 1fr; } }
+.btn { background: linear-gradient(135deg, #d4af37, #f9e076); color: #1a1a1a; padding: 14px 30px; border: none; border-radius: 50px; font-size: 1.1rem; cursor: pointer; margin: 10px 5px; font-weight: bold; transition: 0.2s; }
+.btn:active { transform: scale(0.97); }
+.btn-danger { background: #ff4d4d; color: #fff; }
+.btn-group { text-align: center; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; }
+.result { margin-top: 25px; overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden; min-width: 500px; }
   th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
   th { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
   td a { color: #d4af37; word-break: break-all; }
- .copy-btn,.edit-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin: 2px; }
+.copy-btn,.edit-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin: 2px; }
   label { color: #d4af37; font-size: 0.95rem; margin-top: 10px; display: block; }
+ .output-code { background: rgba(0,0,0,0.7); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -31,6 +34,23 @@
 <div class="container">
   <h2>Bulk Generator Link Undangan</h2>
 
+  <h3>Data Mempelai</h3>
+  <div class="couple-input">
+    <div>
+      <label>Nama Mempelai Cowok</label>
+      <input type="text" id="mempelaiCowok" placeholder="Rizal Aditya Putra">
+      <label>Foto Mempelai Cowok (link imgbb/postimg)</label>
+      <input type="text" id="fotoCowok" placeholder="https://i.postimg.cc/...">
+    </div>
+    <div>
+      <label>Nama Mempelai Cewek</label>
+      <input type="text" id="mempelaiCewek" placeholder="Ajeng Rosita">
+      <label>Foto Mempelai Cewek (link imgbb/postimg)</label>
+      <input type="text" id="fotoCewek" placeholder="https://i.postimg.cc/...">
+    </div>
+  </div>
+
+  <h3>Data Tamu</h3>
   <div class="side-input">
     <div>
       <label>Sisi Mempelai Cowok</label>
@@ -44,12 +64,17 @@
 
   <div class="btn-group">
     <button class="btn" onclick="generateLinks()">Generate Semua</button>
+    <button class="btn" onclick="generateHTML()">Generate HTML Code</button>
     <button class="btn" onclick="downloadCSV()">Download Excel CSV</button>
     <button class="btn" onclick="downloadPDF()">Download PDF</button>
     <button class="btn btn-danger" onclick="clearAll()">Hapus Semua Data</button>
   </div>
 
-  <div class="result" id="result">
+  <div class="result" id="result" style="display:none;">
+    <h3>Output HTML Code</h3>
+    <div class="output-code" id="outputHTML"></div>
+    <button class="copy-btn" onclick="copyText(document.getElementById('outputHTML').innerText)">Copy Code</button>
+
     <h3>Sisi Mempelai Cowok - <span id="countCowok">0</span> tamu</h3>
     <table id="tableCowok">
       <thead><tr><th>No</th><th>Nama Tamu</th><th>Link Undangan</th><th>Action</th></tr></thead>
@@ -75,12 +100,20 @@ const baseURL = window.location.origin + window.location.pathname.replace('gener
 window.onload = function() {
   dataCowok = JSON.parse(localStorage.getItem('dataCowok') || '[]');
   dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
+  document.getElementById('mempelaiCowok').value = localStorage.getItem('mempelaiCowok') || '';
+  document.getElementById('mempelaiCewek').value = localStorage.getItem('mempelaiCewek') || '';
+  document.getElementById('fotoCowok').value = localStorage.getItem('fotoCowok') || '';
+  document.getElementById('fotoCewek').value = localStorage.getItem('fotoCewek') || '';
   renderTables();
 }
 
 function saveToStorage() {
   localStorage.setItem('dataCowok', JSON.stringify(dataCowok));
   localStorage.setItem('dataCewek', JSON.stringify(dataCewek));
+  localStorage.setItem('mempelaiCowok', document.getElementById('mempelaiCowok').value);
+  localStorage.setItem('mempelaiCewek', document.getElementById('mempelaiCewek').value);
+  localStorage.setItem('fotoCowok', document.getElementById('fotoCowok').value);
+  localStorage.setItem('fotoCewek', document.getElementById('fotoCewek').value);
 }
 
 function generateLinks() {
@@ -102,6 +135,38 @@ function generateLinks() {
 
   saveToStorage();
   renderTables();
+}
+
+function generateHTML() {
+  const cowok = document.getElementById('mempelaiCowok').value;
+  const cewek = document.getElementById('mempelaiCewek').value;
+  const fotoCowok = document.getElementById('fotoCowok').value;
+  const fotoCewek = document.getElementById('fotoCewek').value;
+
+  if (!cowok ||!cewek ||!fotoCowok ||!fotoCewek) {
+    alert('Isi dulu nama & foto mempelai!');
+    return;
+  }
+
+  const htmlCode = `<!-- COWOK -->
+<div class="page" id="page2">
+  <div class="content">
+    <img src="${fotoCowok}" class="photo">
+    <h2>${cowok}</h2>
+  </div>
+</div>
+
+<!-- CEWEK -->
+<div class="page" id="page3">
+  <div class="content">
+    <img src="${fotoCewek}" class="photo">
+    <h2>${cewek}</h2>
+  </div>
+</div>`;
+
+  document.getElementById('outputHTML').innerText = htmlCode;
+  document.getElementById('result').style.display = 'block';
+  saveToStorage();
 }
 
 function renderTables() {
@@ -146,22 +211,26 @@ function clearAll() {
   if (!confirm('Hapus semua data?')) return;
   dataCowok = [];
   dataCewek = [];
-  localStorage.removeItem('dataCowok');
-  localStorage.removeItem('dataCewek');
+  localStorage.clear();
   document.getElementById('namaCowok').value = '';
   document.getElementById('namaCewek').value = '';
+  document.getElementById('mempelaiCowok').value = '';
+  document.getElementById('mempelaiCewek').value = '';
+  document.getElementById('fotoCowok').value = '';
+  document.getElementById('fotoCewek').value = '';
+  document.getElementById('outputHTML').innerText = '';
   renderTables();
 }
 
 function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => alert('Link di-copy!'));
+  navigator.clipboard.writeText(text).then(() => alert('Copied!'));
 }
 
 function downloadCSV() {
   if (dataCowok.length === 0 && dataCewek.length === 0) return alert('Generate dulu bro!');
   const allData = [
-  ...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
-  ...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
+ ...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
+ ...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
   ];
   const ws = XLSX.utils.json_to_sheet(allData);
   const wb = XLSX.utils.book_new();
@@ -202,4 +271,4 @@ function downloadPDF() {
 }
 </script>
 </body>
-</html>
+   </html>
