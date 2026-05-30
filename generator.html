@@ -6,14 +6,14 @@
 <title>Bulk Generator Link Undangan</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
-  
+
   body {
     background: #1a1a1a;
     color: #f5f5f5;
     padding: 30px 20px;
   }
 
-  .container {
+ .container {
     background: rgba(212, 175, 55, 0.08);
     border: 1px solid rgba(212, 175, 55, 0.4);
     border-radius: 20px;
@@ -30,7 +30,7 @@
     text-align: center;
   }
 
-  input, textarea {
+  input, textarea, select {
     width: 100%;
     padding: 14px;
     margin: 10px 0;
@@ -48,7 +48,7 @@
     font-family: monospace;
   }
 
-  .btn {
+ .btn {
     background: linear-gradient(135deg, #d4af37, #f9e076);
     color: #1a1a1a;
     padding: 14px 30px;
@@ -60,16 +60,25 @@
     font-weight: bold;
     transition: 0.2s;
   }
-  .btn:active { transform: scale(0.97); }
+ .btn:active { transform: scale(0.97); }
 
-  .btn-group {
-    text-align: center;
-    margin: 20px 0;
+ .btn-danger {
+    background: #ff4d4d;
+    color: #fff;
   }
 
-  .result {
+ .btn-group {
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+ .result {
     margin-top: 25px;
     display: none;
+    overflow-x: auto;
   }
 
   table {
@@ -79,6 +88,7 @@
     background: rgba(0,0,0,0.5);
     border-radius: 10px;
     overflow: hidden;
+    min-width: 600px;
   }
 
   th, td {
@@ -97,14 +107,14 @@
     word-break: break-all;
   }
 
-  .note {
+ .note {
     font-size: 0.9rem;
     color: #ccc;
     margin-top: 10px;
     text-align: center;
   }
 
-  .copy-btn {
+ .copy-btn,.edit-btn,.del-btn {
     background: transparent;
     border: 1px solid #d4af37;
     color: #d4af37;
@@ -112,6 +122,19 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.85rem;
+    margin: 2px;
+  }
+
+ .del-btn {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+  }
+
+  label {
+    color: #d4af37;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    display: block;
   }
 </style>
 </head>
@@ -119,14 +142,19 @@
 
 <div class="container">
   <h2>Bulk Generator Link Undangan</h2>
-  
-  <input type="text" id="baseURL" placeholder="Link dasar undangan. Contoh: https://user.github.io/repo/" required>
-  
+
+  <label>Pilih Tamu Dari Pihak:</label>
+  <select id="pihak">
+    <option value="">Umum</option>
+    <option value="cowok">Mempelai Cowok</option>
+    <option value="cewek">Mempelai Cewek</option>
+  </select>
+
   <textarea id="namaList" placeholder="Masukkan nama tamu, 1 nama per baris:
 Pak Budi
 Ibu Sari
 Keluarga Pak Ahmad"></textarea>
-  
+
   <div class="btn-group">
     <button class="btn" onclick="generateLinks()">Generate Semua</button>
     <button class="btn" onclick="downloadCSV()">Download Excel CSV</button>
@@ -155,16 +183,15 @@ Keluarga Pak Ahmad"></textarea>
 <script>
 let generatedData = [];
 
-function generateLinks() {
-  const base = document.getElementById('baseURL').value.trim();
-  const names = document.getElementById('namaList').value.trim().split('\n');
+// Auto detect base URL
+const baseURL = window.location.origin + window.location.pathname.replace('generator.html', '');
 
-  if (!base) {
-    alert('Isi link dasar dulu!');
-    return;
-  }
-  if (!base.startsWith('http')) {
-    alert('Link dasar harus diawali http:// atau https://');
+function generateLinks() {
+  const names = document.getElementById('namaList').value.trim().split('\n');
+  const pihak = document.getElementById('pihak').value;
+
+  if (names.length === 0 || names[0].trim() === '') {
+    alert('Isi nama tamu dulu!');
     return;
   }
 
@@ -175,15 +202,21 @@ function generateLinks() {
   names.forEach((name, i) => {
     name = name.trim();
     if (!name) return;
-    
-    const link = base + '?untuk=' + encodeURIComponent(name);
+
+    let link = baseURL + '?untuk=' + encodeURIComponent(name);
+    if (pihak) link += '&pihak=' + pihak;
+
     generatedData.push({ No: i+1, Nama: name, Link: link });
 
-    const row = `<tr>
+    const row = `<tr id="row-${i}">
       <td>${i+1}</td>
-      <td>${name}</td>
-      <td><a href="${link}" target="_blank">${link}</a></td>
-      <td><button class="copy-btn" onclick="copyText('${link}')">Copy</button></td>
+      <td><span id="name-${i}">${name}</span></td>
+      <td><a href="${link}" target="_blank" id="link-${i}">${link}</a></td>
+      <td>
+        <button class="copy-btn" onclick="copyText('${link}')">Copy</button>
+        <button class="edit-btn" onclick="editRow(${i})">Edit</button>
+        <button class="del-btn" onclick="deleteRow(${i})">Hapus</button>
+      </td>
     </tr>`;
     tbody.innerHTML += row;
   });
@@ -196,6 +229,30 @@ function copyText(text) {
   navigator.clipboard.writeText(text).then(() => {
     alert('Link di-copy!');
   });
+}
+
+function editRow(index) {
+  const newName = prompt('Edit nama tamu:', generatedData[index].Nama);
+  if (!newName) return;
+
+  const pihak = document.getElementById('pihak').value;
+  let link = baseURL + '?untuk=' + encodeURIComponent(newName);
+  if (pihak) link += '&pihak=' + pihak;
+
+  generatedData[index].Nama = newName;
+  generatedData[index].Link = link;
+
+  document.getElementById(`name-${index}`).innerText = newName;
+  document.getElementById(`link-${index}`).innerText = link;
+  document.getElementById(`link-${index}`).href = link;
+  document.querySelector(`#row-${index}.copy-btn`).setAttribute('onclick', `copyText('${link}')`);
+}
+
+function deleteRow(index) {
+  if (!confirm('Hapus baris ini?')) return;
+  document.getElementById(`row-${index}`).remove();
+  generatedData.splice(index, 1);
+  document.getElementById('totalCount').innerText = generatedData.length;
 }
 
 function downloadCSV() {
@@ -216,11 +273,11 @@ function downloadPDF() {
   }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  
+
   doc.setFontSize(16);
   doc.text("Daftar Link Undangan Pernikahan", 20, 20);
   doc.setFontSize(10);
-  
+
   let y = 35;
   generatedData.forEach(item => {
     if (y > 270) {
@@ -231,10 +288,10 @@ function downloadPDF() {
     doc.text(item.Link, 20, y+6);
     y += 15;
   });
-  
+
   doc.save("link_undangan.pdf");
 }
 </script>
 
 </body>
-  </html>
+   </html>
