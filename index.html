@@ -448,9 +448,15 @@
   let currentPage = 1;
   const totalPages = 5;
 
+  // Ambil parameter ?untuk= dari URL
   const urlParams = new URLSearchParams(window.location.search);
   const namaTamu = urlParams.get('untuk') || 'Tamu Undangan';
+  
+  // Tampilkan nama di cover
   document.getElementById('namaTamu').innerText = namaTamu;
+  
+  // Auto-isi input RSVP
+  document.getElementById('namaRSVP').value = namaTamu;
 
   const dataCowok = JSON.parse(localStorage.getItem('dataCowok') || '[]');
   const dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
