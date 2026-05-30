@@ -242,6 +242,34 @@
     backdrop-filter: blur(8px);
   }
 
+  /* CSS Countdown */
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .countdown-item {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 12px;
+    padding: 12px 15px;
+    min-width: 70px;
+    backdrop-filter: blur(5px);
+  }
+  .countdown-item span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #f9e076;
+  }
+  .countdown-item label {
+    font-size: 0.8rem;
+    color: #e8e8e8;
+    text-transform: uppercase;
+  }
+
   #musicBtn {
     position: fixed;
     bottom: 20px;
@@ -290,6 +318,14 @@
       margin-bottom: 100px;
       margin-top: 0px;
     }
+
+    .countdown-item {
+      min-width: 60px;
+      padding: 10px 12px;
+    }
+    .countdown-item span {
+      font-size: 1.5rem;
+    }
   }
 </style>
 </head>
@@ -319,7 +355,6 @@
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
   <div class="content">
-    <!-- FOTO COWOK -->
     <img src="https://i.postimg.cc/HsFMwcCJ/1780107271151.jpg" class="photo">
     <h2>Rizal Aditya Putra</h2>
     <p>Putra dari<br>Bapak Jaelani & Alm. Ibu Siti Aminah</p>
@@ -331,7 +366,6 @@
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
   <div class="content">
-    <!-- FOTO CEWEK -->
     <img src="https://i.postimg.cc/gk1hVXPL/1780107265251.jpg" class="photo">
     <h2>Ajeng Rosita</h2>
     <p>Putri dari<br>Alm. Bapak Mustakim & Ibu Triana</p>
@@ -351,7 +385,27 @@
     <p class="sambutan">QS. Ar-Rum: 21</p>
 
     <div class="acara-box">
-      <h2>Jadwal Acara</h2>
+      <h2>Menuju Hari Bahagia</h2>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span id="days">00</span>
+          <label>Hari</label>
+        </div>
+        <div class="countdown-item">
+          <span id="hours">00</span>
+          <label>Jam</label>
+        </div>
+        <div class="countdown-item">
+          <span id="minutes">00</span>
+          <label>Menit</label>
+        </div>
+        <div class="countdown-item">
+          <span id="seconds">00</span>
+          <label>Detik</label>
+        </div>
+      </div>
+
+      <h2 style="margin-top:30px;">Jadwal Acara</h2>
       <p><strong>Akad Nikah</strong><br>Sabtu, 5 Juli 2026<br>Pukul 08:00 WIB</p>
       
       <p style="margin-top:20px;"><strong>Resepsi</strong><br>Sabtu, 5 Juli 2026<br>Pukul 10:00 WIB</p>
@@ -461,6 +515,30 @@
     const noWA = "628xxxxxxxxxx";
     window.open(`https://wa.me/${noWA}?text=${pesan}`, '_blank');
   });
+
+  // Script Countdown
+  const weddingDate = new Date("July 5, 2026 08:00:00").getTime();
+  
+  const countdownTimer = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = weddingDate - now;
+    
+    if (distance < 0) {
+      clearInterval(countdownTimer);
+      document.getElementById("countdown").innerHTML = "<h3 style='color:#f9e076;'>Hari Bahagia Telah Tiba!</h3>";
+      return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    document.getElementById("days").innerText = String(days).padStart(2, '0');
+    document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+    document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+    document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+  }, 1000);
 </script>
 
 </body>
