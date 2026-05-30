@@ -26,7 +26,7 @@
   td a { color: #d4af37; word-break: break-all; }
 .copy-btn,.edit-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin: 2px; }
   label { color: #d4af37; font-size: 0.95rem; margin-top: 10px; display: block; }
- .output-code { background: rgba(0,0,0,0.7); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; }
+.output-code { background: rgba(0,0,0,0.7); padding: 15px; border-radius: 10px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -39,14 +39,10 @@
     <div>
       <label>Nama Mempelai Cowok</label>
       <input type="text" id="mempelaiCowok" placeholder="Rizal Aditya Putra">
-      <label>Foto Mempelai Cowok (link imgbb/postimg)</label>
-      <input type="text" id="fotoCowok" placeholder="https://i.postimg.cc/...">
     </div>
     <div>
       <label>Nama Mempelai Cewek</label>
       <input type="text" id="mempelaiCewek" placeholder="Ajeng Rosita">
-      <label>Foto Mempelai Cewek (link imgbb/postimg)</label>
-      <input type="text" id="fotoCewek" placeholder="https://i.postimg.cc/...">
     </div>
   </div>
 
@@ -66,7 +62,6 @@
     <button class="btn" onclick="generateLinks()">Generate Semua</button>
     <button class="btn" onclick="generateHTML()">Generate HTML Code</button>
     <button class="btn" onclick="downloadCSV()">Download Excel CSV</button>
-    <button class="btn" onclick="downloadPDF()">Download PDF</button>
     <button class="btn btn-danger" onclick="clearAll()">Hapus Semua Data</button>
   </div>
 
@@ -90,7 +85,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script>
 let dataCowok = [];
@@ -102,8 +96,6 @@ window.onload = function() {
   dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
   document.getElementById('mempelaiCowok').value = localStorage.getItem('mempelaiCowok') || '';
   document.getElementById('mempelaiCewek').value = localStorage.getItem('mempelaiCewek') || '';
-  document.getElementById('fotoCowok').value = localStorage.getItem('fotoCowok') || '';
-  document.getElementById('fotoCewek').value = localStorage.getItem('fotoCewek') || '';
   renderTables();
 }
 
@@ -112,8 +104,6 @@ function saveToStorage() {
   localStorage.setItem('dataCewek', JSON.stringify(dataCewek));
   localStorage.setItem('mempelaiCowok', document.getElementById('mempelaiCowok').value);
   localStorage.setItem('mempelaiCewek', document.getElementById('mempelaiCewek').value);
-  localStorage.setItem('fotoCowok', document.getElementById('fotoCowok').value);
-  localStorage.setItem('fotoCewek', document.getElementById('fotoCewek').value);
 }
 
 function generateLinks() {
@@ -140,18 +130,19 @@ function generateLinks() {
 function generateHTML() {
   const cowok = document.getElementById('mempelaiCowok').value;
   const cewek = document.getElementById('mempelaiCewek').value;
-  const fotoCowok = document.getElementById('fotoCowok').value;
-  const fotoCewek = document.getElementById('fotoCewek').value;
 
-  if (!cowok ||!cewek ||!fotoCowok ||!fotoCewek) {
-    alert('Isi dulu nama & foto mempelai!');
+  if (!cowok ||!cewek) {
+    alert('Isi dulu nama mempelai!');
     return;
   }
+
+  // Pakai foto.jpg yang ada di repo
+  const fotoPrewed = baseURL + 'foto.jpg';
 
   const htmlCode = `<!-- COWOK -->
 <div class="page" id="page2">
   <div class="content">
-    <img src="${fotoCowok}" class="photo">
+    <img src="${fotoPrewed}" class="photo">
     <h2>${cowok}</h2>
   </div>
 </div>
@@ -159,7 +150,7 @@ function generateHTML() {
 <!-- CEWEK -->
 <div class="page" id="page3">
   <div class="content">
-    <img src="${fotoCewek}" class="photo">
+    <img src="${fotoPrewed}" class="photo">
     <h2>${cewek}</h2>
   </div>
 </div>`;
@@ -216,8 +207,6 @@ function clearAll() {
   document.getElementById('namaCewek').value = '';
   document.getElementById('mempelaiCowok').value = '';
   document.getElementById('mempelaiCewek').value = '';
-  document.getElementById('fotoCowok').value = '';
-  document.getElementById('fotoCewek').value = '';
   document.getElementById('outputHTML').innerText = '';
   renderTables();
 }
@@ -229,45 +218,13 @@ function copyText(text) {
 function downloadCSV() {
   if (dataCowok.length === 0 && dataCewek.length === 0) return alert('Generate dulu bro!');
   const allData = [
- ...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
- ...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
+...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
+...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
   ];
   const ws = XLSX.utils.json_to_sheet(allData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Undangan");
   XLSX.writeFile(wb, "link_undangan.xlsx");
-}
-
-function downloadPDF() {
-  if (dataCowok.length === 0 && dataCewek.length === 0) return alert('Generate dulu bro!');
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.text("Daftar Link Undangan Pernikahan", 20, 20);
-  let y = 35;
-
-  doc.setFontSize(12);
-  doc.text("SISI MEMPELAI COWOK", 20, y); y += 10;
-  dataCowok.forEach((item,i) => {
-    if (y > 270) { doc.addPage(); y = 20; }
-    doc.setFontSize(10);
-    doc.text(`${i+1}. ${item.nama}`, 20, y);
-    doc.text(item.link, 20, y+6);
-    y += 15;
-  });
-
-  y += 10;
-  doc.setFontSize(12);
-  doc.text("SISI MEMPELAI CEWEK", 20, y); y += 10;
-  dataCewek.forEach((item,i) => {
-    if (y > 270) { doc.addPage(); y = 20; }
-    doc.setFontSize(10);
-    doc.text(`${i+1}. ${item.nama}`, 20, y);
-    doc.text(item.link, 20, y+6);
-    y += 15;
-  });
-
-  doc.save("link_undangan.pdf");
 }
 </script>
 </body>
