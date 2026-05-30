@@ -27,7 +27,6 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  /* Bunga pojok kiri bawah */
   .page::before {
     content: '';
     position: absolute;
@@ -44,7 +43,6 @@
     z-index: 1;
   }
 
-  /* Bunga pojok kanan atas */
   .page::after {
     content: '';
     position: absolute;
@@ -62,7 +60,6 @@
     transform: scaleX(-1) scaleY(-1);
   }
 
-  /* Bunga pojok kanan bawah */
   .corner-br {
     position: absolute;
     bottom: 0;
@@ -79,7 +76,6 @@
     transform: scaleX(-1);
   }
 
-  /* Bunga pojok kiri atas */
   .corner-tl {
     position: absolute;
     top: 0;
@@ -105,7 +101,6 @@
     max-width: 600px;
   }
 
-  /* Khusus halaman cover biar konten naik */
   .content.cover-content {
     margin-bottom: 120px;
   }
@@ -222,7 +217,7 @@
       object-position: center 5%;
     }
     .content.cover-content {
-      margin-bottom: 340px; /* Naikin lagi biar di atas kepala cewek */
+      margin-bottom: 340px;
     }
   }
 </style>
@@ -239,6 +234,7 @@
     <p class="sambutan">The Wedding of</p>
     <h1>Rizal & Ajeng</h1>
     <p class="sambutan">Kepada Yth.<br><strong id="namaTamu">Tamu Undangan</strong></p>
+    <p class="sambutan" id="pihakTamu"></p>
     <button class="btn" onclick="nextPage()">Buka Undangan</button>
   </div>
 </div>
@@ -323,7 +319,22 @@
   const totalPages = 5;
 
   const urlParams = new URLSearchParams(window.location.search);
-  document.getElementById('namaTamu').innerText = urlParams.get('untuk') || 'Tamu Undangan';
+  const namaTamu = urlParams.get('untuk') || 'Tamu Undangan';
+  document.getElementById('namaTamu').innerText = namaTamu;
+
+  // Cek pihak cowok/cewek dari localStorage generator
+  const dataCowok = JSON.parse(localStorage.getItem('dataCowok') || '[]');
+  const dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
+
+  let pihak = '';
+  if (dataCowok.some(d => d.nama.toLowerCase() === namaTamu.toLowerCase())) pihak = 'cowok';
+  if (dataCewek.some(d => d.nama.toLowerCase() === namaTamu.toLowerCase())) pihak = 'cewek';
+
+  if (pihak === 'cowok') {
+    document.getElementById('pihakTamu').innerText = 'Tamu dari mempelai pria';
+  } else if (pihak === 'cewek') {
+    document.getElementById('pihakTamu').innerText = 'Tamu dari mempelai wanita';
+  }
 
   function nextPage() {
     document.getElementById('page' + currentPage).classList.remove('active');
