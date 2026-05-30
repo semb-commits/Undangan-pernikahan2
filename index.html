@@ -27,16 +27,16 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  /* Background bunga lokal */
+  /* Background bunga full repeat */
   .page::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image: url('bunga gold.png');
-    background-size: 70%;
-    background-repeat: no-repeat;
+    background-size: cover;
+    background-repeat: repeat;
     background-position: center;
-    opacity: 0.08;
+    opacity: 0.06;
     pointer-events: none;
   }
 
@@ -151,7 +151,7 @@
     h1 { font-size: 2.2rem; }
     h2 { font-size: 1.5rem; }
     .photo { width: 200px; height: 280px; }
-    .page::before { background-size: 90%; }
+    .page::before { background-size: 400px; }
   }
 </style>
 </head>
