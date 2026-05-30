@@ -225,7 +225,6 @@
     backdrop-filter: blur(8px);
   }
 
-  /* Tombol musik - udah dikecilin */
   #musicBtn {
     position: fixed;
     bottom: 20px;
@@ -279,15 +278,12 @@
 </head>
 <body>
 
-<!-- AUDIO -->
 <audio id="bgm" loop preload="auto">
-  <source src="lagu-1.mp3" type="audio/mpeg">
+  <source src="./lagu-1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- TOMBOL MUSIK -->
 <button id="musicBtn">🎵</button>
 
-<!-- HALAMAN 1: COVER -->
 <div class="page active" id="page1">
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
@@ -302,7 +298,6 @@
   </div>
 </div>
 
-<!-- HALAMAN 2: MEMPELAI PRIA -->
 <div class="page" id="page2">
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
@@ -314,7 +309,6 @@
   </div>
 </div>
 
-<!-- HALAMAN 3: MEMPELAI WANITA -->
 <div class="page" id="page3">
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
@@ -326,7 +320,6 @@
   </div>
 </div>
 
-<!-- HALAMAN 4: ACARA & LOKASI -->
 <div class="page" id="page4">
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
@@ -357,7 +350,6 @@
   </div>
 </div>
 
-<!-- HALAMAN 5: RSVP -->
 <div class="page" id="page5">
   <div class="corner-tl"></div>
   <div class="corner-br"></div>
@@ -400,42 +392,32 @@
     document.getElementById('pihakTamu').innerText = 'Tamu dari mempelai wanita';
   }
 
-  // Audio control
   const bgm = document.getElementById('bgm');
   const musicBtn = document.getElementById('musicBtn');
   const openBtn = document.getElementById('openBtn');
   let isPlaying = false;
 
-  // Fungsi play audio
   function playMusic(){
     bgm.play().then(() => {
       isPlaying = true;
       musicBtn.innerText = '🔇';
     }).catch(err => {
-      console.log("Audio play failed:", err);
+      console.log("Audio error:", err);
     });
   }
 
-  // Fungsi pause audio
   function pauseMusic(){
     bgm.pause();
     isPlaying = false;
     musicBtn.innerText = '🎵';
   }
 
-  // Tombol musik manual
   musicBtn.addEventListener('click', () => {
-    if(!isPlaying){
-      playMusic();
-    } else {
-      pauseMusic();
-    }
+    isPlaying ? pauseMusic() : playMusic();
   });
 
-  // Autoplay pas klik Buka Undangan
   openBtn.addEventListener('click', () => {
     nextPage();
-    playMusic();
   });
 
   function nextPage() {
