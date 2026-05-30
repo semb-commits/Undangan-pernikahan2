@@ -225,19 +225,23 @@
     backdrop-filter: blur(8px);
   }
 
-  /* Tombol musik */
+  /* Tombol musik - udah dikecilin */
   #musicBtn {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 999;
-    background: #d4af37;
-    border: none;
-    padding: 12px 14px;
+    background: rgba(212, 175, 55, 0.9);
+    border: 1px solid #d4af37;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 20px;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
     transition: all 0.2s;
   }
   #musicBtn:active { transform: scale(0.9); }
@@ -276,7 +280,7 @@
 <body>
 
 <!-- AUDIO -->
-<audio id="bgm" loop>
+<audio id="bgm" loop preload="auto">
   <source src="lagu-1.mp3" type="audio/mpeg">
 </audio>
 
@@ -294,7 +298,7 @@
     <h1>Rizal & Ajeng</h1>
     <p class="sambutan">Kepada Yth.<br><strong id="namaTamu">Tamu Undangan</strong></p>
     <p class="sambutan" id="pihakTamu"></p>
-    <button class="btn" onclick="nextPage()">Buka Undangan</button>
+    <button class="btn" id="openBtn">Buka Undangan</button>
   </div>
 </div>
 
@@ -399,18 +403,39 @@
   // Audio control
   const bgm = document.getElementById('bgm');
   const musicBtn = document.getElementById('musicBtn');
+  const openBtn = document.getElementById('openBtn');
   let isPlaying = false;
 
+  // Fungsi play audio
+  function playMusic(){
+    bgm.play().then(() => {
+      isPlaying = true;
+      musicBtn.innerText = '🔇';
+    }).catch(err => {
+      console.log("Audio play failed:", err);
+    });
+  }
+
+  // Fungsi pause audio
+  function pauseMusic(){
+    bgm.pause();
+    isPlaying = false;
+    musicBtn.innerText = '🎵';
+  }
+
+  // Tombol musik manual
   musicBtn.addEventListener('click', () => {
     if(!isPlaying){
-      bgm.play();
-      musicBtn.innerText = '🔇';
-      isPlaying = true;
+      playMusic();
     } else {
-      bgm.pause();
-      musicBtn.innerText = '🎵';
-      isPlaying = false;
+      pauseMusic();
     }
+  });
+
+  // Autoplay pas klik Buka Undangan
+  openBtn.addEventListener('click', () => {
+    nextPage();
+    playMusic();
   });
 
   function nextPage() {
@@ -418,12 +443,6 @@
     currentPage++;
     if (currentPage <= totalPages) {
       document.getElementById('page' + currentPage).classList.add('active');
-    }
-    // Autoplay musik pas buka undangan
-    if(currentPage == 2 && !isPlaying){
-      bgm.play();
-      isPlaying = true;
-      musicBtn.innerText = '🔇';
     }
   }
 
