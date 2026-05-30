@@ -74,7 +74,17 @@ const baseURL = window.location.origin + window.location.pathname.replace('gener
 window.onload = function() {
   dataCowok = JSON.parse(localStorage.getItem('dataCowok') || '[]');
   dataCewek = JSON.parse(localStorage.getItem('dataCewek') || '[]');
+  
+  // Balikin isi textarea biar gak hilang pas refresh
+  document.getElementById('namaCowok').value = dataCowok.map(d => d.nama).join('\n');
+  document.getElementById('namaCewek').value = dataCewek.map(d => d.nama).join('\n');
+  
   renderTables();
+  
+  // Tampilin tabel kalau ada data
+  if (dataCowok.length > 0 || dataCewek.length > 0) {
+    document.getElementById('result').style.display = 'block';
+  }
 }
 
 function generate() {
@@ -144,8 +154,8 @@ function copyText(text) {
 function downloadCSV() {
   if (dataCowok.length === 0 && dataCewek.length === 0) return alert('Generate dulu!');
   const allData = [
-...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
-...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
+    ...dataCowok.map((d,i) => ({ No: i+1, Pihak: 'Cowok', Nama: d.nama, Link: d.link })),
+    ...dataCewek.map((d,i) => ({ No: i+1, Pihak: 'Cewek', Nama: d.nama, Link: d.link }))
   ];
   const ws = XLSX.utils.json_to_sheet(allData);
   const wb = XLSX.utils.book_new();
