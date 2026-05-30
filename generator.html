@@ -121,14 +121,16 @@ function renderTable(tableId, data, side) {
   const tbody = document.querySelector(`#${tableId} tbody`);
   tbody.innerHTML = '';
   data.forEach((item, i) => {
-    const safeLink = item.link.replace(/'/g, "\\'");
+    const pesanWA = `Yth. ${item.nama},\n\nMohon kehadirannya di pernikahan Rizal & Ajeng 👇\n${item.link}`;
+    const safePesan = pesanWA.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+    
     tbody.innerHTML += `
       <tr>
         <td>${i+1}</td>
         <td>${item.nama}</td>
         <td><a href="${item.link}" target="_blank">${item.link}</a></td>
         <td>
-          <button class="copy-btn" onclick="copyText('${safeLink}')">Copy</button>
+          <button class="copy-btn" onclick="copyText('${safePesan}')">Copy Chat</button>
         </td>
       </tr>
     `;
@@ -148,7 +150,7 @@ function clearAll() {
 }
 
 function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => alert('Link copied!'));
+  navigator.clipboard.writeText(text).then(() => alert('Pesan sudah dicopy! Tinggal paste ke WA'));
 }
 
 function downloadCSV() {
@@ -190,4 +192,4 @@ function downloadPDF() {
 }
 </script>
 </body>
-   </html>
+     </html>
