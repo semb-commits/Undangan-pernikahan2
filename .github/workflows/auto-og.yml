@@ -1,0 +1,26 @@
+name: Auto Update OG Version
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Replace version with timestamp
+        run: |
+          VERSION=$(date +%s)
+          sed -i "s/__VERSION__/$VERSION/g" index.html
+          
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "Auto update OG version $VERSION" || exit 0
+          git push
