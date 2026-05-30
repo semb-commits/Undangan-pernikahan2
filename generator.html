@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Generator Link Undangan</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
+  
+  body {
+    background: #1a1a1a;
+    color: #f5f5f5;
+    padding: 30px 20px;
+  }
+
+  .container {
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+  }
+
+  h2 {
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  textarea {
+    min-height: 150px;
+    resize: vertical;
+    font-family: monospace;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #d4af37, #f9e076);
+    color: #1a1a1a;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 10px 5px;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-group {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .result {
+    margin-top: 25px;
+    display: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  th {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+  }
+
+  td a {
+    color: #d4af37;
+    word-break: break-all;
+  }
+
+  .note {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Bulk Generator Link Undangan</h2>
+  
+  <input type="text" id="baseURL" placeholder="Link dasar undangan. Contoh: https://user.github.io/repo/" required>
+  
+  <textarea id="namaList" placeholder="Masukkan nama tamu, 1 nama per baris:
+Pak Budi
+Ibu Sari
+Keluarga Pak Ahmad"></textarea>
+  
+  <div class="btn-group">
+    <button class="btn" onclick="generateLinks()">Generate Semua</button>
+    <button class="btn" onclick="downloadCSV()">Download Excel CSV</button>
+    <button class="btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <div class="result" id="result">
+    <p class="note">Total <span id="totalCount">0</span> link berhasil dibuat</p>
+    <table id="linkTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Tamu</th>
+          <th>Link Undangan</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+let generatedData = [];
+
+function generateLinks() {
+  const base = document.getElementById('baseURL').value.trim();
+  const names = document.getElementById('namaList').value.trim().split('\n');
+
+  if (!base) {
+    alert('Isi link dasar dulu!');
+    return;
+  }
+  if (!base.startsWith('http')) {
+    alert('Link dasar harus diawali http:// atau https://');
+    return;
+  }
+
+  generatedData = [];
+  const tbody = document.querySelector('#linkTable tbody');
+  tbody.innerHTML = '';
+
+  names.forEach((name, i) => {
+    name = name.trim();
+    if (!name) return;
+    
+    const link = base + '?untuk=' + encodeURIComponent(name);
+    generatedData.push({ No: i+1, Nama: name, Link: link });
+
+    const row = `<tr>
+      <td>${i+1}</td>
+      <td>${name}</td>
+      <td><a href="${link}" target="_blank">${link}</a></td>
+      <td><button class="copy-btn" onclick="copyText('${link}')">Copy</button></td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+
+  document.getElementById('totalCount').innerText = generatedData.length;
+  document.getElementById('result').style.display = 'block';
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Link di-copy!');
+  });
+}
+
+function downloadCSV() {
+  if (generatedData.length === 0) {
+    alert('Generate dulu bro!');
+    return;
+  }
+  const ws = XLSX.utils.json_to_sheet(generatedData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Undangan");
+  XLSX.writeFile(wb, "link_undangan.xlsx");
+}
+
+function downloadPDF() {
+  if (generatedData.length === 0) {
+    alert('Generate dulu bro!');
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  doc.setFontSize(16);
+  doc.text("Daftar Link Undangan Pernikahan", 20, 20);
+  doc.setFontSize(10);
+  
+  let y = 35;
+  generatedData.forEach(item => {
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+    doc.text(`${item.No}. ${item.Nama}`, 20, y);
+    doc.text(item.Link, 20, y+6);
+    y += 15;
+  });
+  
+  doc.save("link_undangan.pdf");
+}
+</script>
+
+</body>
+  </html>
